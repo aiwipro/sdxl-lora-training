@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Dataset files (usually large)
+datasets/*/
+!datasets/.gitkeep
+
+# Model outputs
+outputs/*
+!outputs/.gitkeep
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Kohya SS (if cloned here)
+kohya_ss/
+
+# Model files (usually very large)
+models/*
+!models/.gitkeep
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.bin
+
+# Cache
+.cache/
+*.cache

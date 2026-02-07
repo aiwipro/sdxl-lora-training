@@ -1,0 +1,34 @@
+# Core dependencies for SDXL LoRA training with Kohya SS
+# Note: Install kohya_ss separately as it's a separate repository
+
+# PyTorch (install separately based on your platform)
+# - Apple Silicon (M1/M2/M3): pip install torch torchvision (includes MPS support)
+# - NVIDIA CUDA 11.8: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+# - NVIDIA CUDA 12.1: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+
+# Accelerate for distributed training
+accelerate>=0.21.0
+
+# Diffusers and transformers
+diffusers>=0.21.0
+transformers>=4.30.0
+
+# Image processing
+Pillow>=9.5.0
+opencv-python>=4.7.0
+
+# Utilities
+tqdm>=4.65.0
+numpy>=1.24.0
+safetensors>=0.3.0
+
+# Optional but recommended (platform-specific)
+# Note: xformers and bitsandbytes are NOT available on Apple Silicon Macs
+# xformers>=0.0.20  # For memory efficiency (NVIDIA GPUs only)
+# bitsandbytes>=0.41.0  # For 8-bit optimizers (NVIDIA GPUs only)
+
+# Dataset handling
+pandas>=2.0.0
+
+# Configuration
+toml>=0.10.2

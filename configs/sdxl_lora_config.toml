@@ -1,0 +1,105 @@
+# SDXL LoRA Training Configuration
+# This is a template configuration file for training SDXL LoRA models
+
+[model]
+pretrained_model_name_or_path = "path/to/sdxl-base-1.0"  # Path to SDXL base model
+# Alternative: use HuggingFace model ID
+# pretrained_model_name_or_path = "stabilityai/stable-diffusion-xl-base-1.0"
+
+[dataset]
+train_data_dir = "datasets/your_dataset"
+# Resolution for SDXL (recommended: 1024x1024)
+resolution = "1024,1024"
+# Enable bucketing for different aspect ratios (optional)
+enable_bucket = true
+# Bucket resolutions (width,height pairs)
+bucket_resolutions = [
+    [512, 2048],
+    [512, 1984],
+    [512, 1920],
+    [512, 1856],
+    [768, 1792],
+    [768, 1728],
+    [896, 1664],
+    [896, 1600],
+    [1024, 1536],
+    [1024, 1472],
+    [1088, 1408],
+    [1088, 1344],
+    [1152, 1280],
+    [1216, 1216],
+    [1280, 1152],
+    [1344, 1088],
+    [1408, 1088],
+    [1472, 1024],
+    [1536, 1024],
+    [1600, 896],
+    [1664, 896],
+    [1728, 768],
+    [1792, 768],
+    [1856, 512],
+    [1920, 512],
+    [1984, 512],
+    [2048, 512]
+]
+bucket_no_upscale = false
+
+[training]
+# Batch size - adjust based on VRAM (start with 1-2)
+train_batch_size = 1
+# Gradient accumulation steps (effective batch = batch_size * gradient_accumulation_steps)
+gradient_accumulation_steps = 4
+# Number of epochs or steps
+max_train_epochs = 10
+max_train_steps = 2000
+# Learning rate
+learning_rate = 1.0e-4
+# Learning rate scheduler
+lr_scheduler = "cosine_with_restarts"
+lr_warmup_steps = 100
+# Optimizer
+optimizer_type = "AdamW8bit"  # Options: AdamW, AdamW8bit, Lion, SGDNesterov
+# Mixed precision training
+mixed_precision = "fp16"  # Options: no, fp16, bf16
+# Save checkpoints
+save_every_n_epochs = 1
+save_every_n_steps = 500
+save_last_n_steps = 3
+save_last_n_epochs = 3
+# Output directory
+output_dir = "outputs/models"
+output_name = "sdxl_lora"
+# Logging
+logging_dir = "outputs/logs"
+log_with = "tensorboard"  # Options: tensorboard, wandb
+
+[network]
+# LoRA configuration
+network_module = "networks.lora"
+network_dim = 16  # LoRA rank (4-32 typical, higher = more capacity)
+network_alpha = 8  # Usually half of network_dim
+# Training target (which layers to train)
+network_args = [
+    "enable_lycoris=false",
+    "conv_dim=1",
+    "conv_alpha=1",
+    "algo=lora"
+]
+
+[optimization]
+# Memory optimization
+cache_latents = true
+cache_latents_to_disk = true
+# Gradient checkpointing (saves VRAM)
+gradient_checkpointing = false
+# Use xformers memory efficient attention
+xformers = true
+
+[validation]
+# Optional: validation prompts
+validation_prompts = [
+    "a photo of your subject",
+    "your subject in a different setting"
+]
+validation_steps = 500
+validation_epochs = 1
