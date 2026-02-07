@@ -162,13 +162,6 @@ if [ "$IS_MAC" = false ]; then
     TRAIN_ARGS+=(--xformers)
 fi
 
-# Use venv python if available
-if [ -f "$PROJECT_ROOT/venv/bin/python" ]; then
-    PYTHON_CMD="$PROJECT_ROOT/venv/bin/python"
-else
-    PYTHON_CMD="python"
-fi
-
 # Run training (sdxl_train_network.py is in current directory now)
 $PYTHON_CMD -m accelerate.commands.launch --num_cpu_threads_per_process=$NUM_CPU_THREADS sdxl_train_network.py "${TRAIN_ARGS[@]}"
 

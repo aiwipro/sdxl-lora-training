@@ -12,9 +12,8 @@ import argparse
 import json
 import os
 from pathlib import Path
-from typing import List, Dict
+from typing import Dict
 from PIL import Image
-import hashlib
 
 
 def validate_image(image_path: Path) -> bool:
@@ -93,9 +92,22 @@ def create_metadata_jsonl(
     # Write metadata.jsonl
     with open(output_file, "w", encoding="utf-8") as f:
         f.write("\n".join(metadata_lines))
-    
+
     print(f"Created metadata file: {output_file}")
     print(f"Total entries: {len(metadata_lines)}")
+
+    # Write metadata.json in kohya_ss format (keyed by absolute image path)
+    kohya_metadata = {}
+    for line in metadata_lines:
+        entry = json.loads(line)
+        image_key = str((dataset_dir / entry["file_name"]).resolve())
+        kohya_metadata[image_key] = {"text": entry["text"]}
+
+    kohya_file = output_file.with_suffix(".json")
+    with open(kohya_file, "w", encoding="utf-8") as f:
+        json.dump(kohya_metadata, f, indent=2, ensure_ascii=False)
+
+    print(f"Created kohya_ss metadata: {kohya_file}")
 
 
 def analyze_dataset(dataset_dir: Path) -> None:
@@ -178,10 +190,10 @@ def main():
     if args.create_metadata:
         metadata_file = output_dir / "metadata.jsonl"
         create_metadata_jsonl(input_dir, metadata_file, args.caption_suffix)
-        print(f"\nMetadata file created: {metadata_file}")
+        print(f"\nMetadata files created in: {output_dir}")
         print("\nNext steps:")
-        print("1. Review and edit captions in the metadata.jsonl file if needed")
-        print("2. Use this dataset directory in your training configuration")
+        print("1. Review and edit captions in metadata.jsonl, then re-run to regenerate metadata.json")
+        print("2. Run training: bash scripts/train_sdxl_lora.sh")
 
 
 if __name__ == "__main__":
